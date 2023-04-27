@@ -1,0 +1,13 @@
+#All commands used
+
+#1: used to extract IP addresses
+jq -r '.src_ip' cowrie.json | sort -u > final_ips.txt
+
+#2: used to give me the general location of the ip addresses
+while read -r ip; do echo "$ip: $(geoiplookup "$ip")"; done < ips.txt > locations.txt
+
+#3: Used to sort the most frequent countries
+grep -oP '(?<=GeoIP Country Edition: )\w+' general_locations.txt | awk '{count[$0]++} END {for (i in count) print count[i], i}' | sort -rn > final_countries.txt
+
+#4: gives the successful login attempts 
+grep "login attempt"cowrie.json  | grep -v "failed > Successful.txt
